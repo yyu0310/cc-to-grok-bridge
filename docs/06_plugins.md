@@ -1,7 +1,8 @@
 # 06_Plugins — Claude Code → Grok Build
 
 > 相容等級：**低**（skill 清單可能看得見；**always-on 不會自動跟過去**）。  
-> 用 plugin 的目的就是 **不用每場手動開**——遷移只談 always-on 路線。  
+> 用 plugin 的目的就是 **不用每場手動開**——遷移只談 always-on 路線（**有 A／B 解法**，不是無解）。  
+> **展望：** 多數常用 plugin 若都上 Grok marketplace 且有正式 Grok 包裝，相容性可升到 **中～高**（A 變常態；仍不會自動搬 CC `enabledPlugins`）。  
 > 給 AI 的操作見 [AGENTS.md](../AGENTS.md)「Plugins」。
 
 ## 為什麼 CC 開了 plugin，Grok 卻「不行」

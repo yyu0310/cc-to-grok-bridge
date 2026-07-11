@@ -28,8 +28,9 @@ Bridge **Claude Code** → **Grok Build**: reuse rules / skills, run the same ho
 
 **In practice:** moving a Claude Code setup onto **Grok Build** is usually much smoother than the Antigravity / Gemini bridge path (real hard-blocks + simpler memory). Always-on plugins still need a deliberate path.
 
-**Plugins note (Low = not drop-in; use path A or B):**  
-CC auto-enabled plugins ≠ Grok per-session injection. **A:** `grok plugin install` only when upstream has Grok packaging (SessionStart always-on). **B:** otherwise put always-on text in `.grok/rules/` (auto-load, no slash). See [docs/06_plugins.md](docs/06_plugins.md).
+**Plugins note (Low = not drop-in, but documented fixes exist):**  
+CC auto-enabled plugins ≠ Grok per-session injection. **A:** `grok plugin install` only when upstream has Grok packaging (SessionStart always-on). **B:** otherwise put always-on text in `.grok/rules/` (auto-load, no slash). See [docs/06_plugins.md](docs/06_plugins.md).  
+**Outlook:** if most common plugins ship on the Grok marketplace with real Grok packaging, compatibility can rise to **medium–high** (still not auto-porting CC settings, but path A becomes normal and B is the exception).
 
 Memory detail: bridge day-use does **not** require `[memory] enabled=true` first — the **rules pointer** loads with the project. Product memory improves search if you want it.
 

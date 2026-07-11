@@ -28,8 +28,9 @@
 
 **实测体感：** 把 CC 环境导入 **Grok Build**，通常比走 Antigravity／Gemini 桥顺很多（有真 hook 硬挡、memory 也比较好处理）。Plugins always-on 仍是明显落差，要单独处理。
 
-**Plugins 补充（兼容性标「低」＝不能 drop-in，要走 A／B 迁移）：**  
-CC 开了 auto plugin ≠ Grok 每 session 自动注入。路线 **A**：上游有 Grok 包装才 `grok plugin install`（SessionStart always-on）；**B**：否则把 always-on 规则放进 `.grok/rules/`（开场自动载、免 slash）。无 Grok adapter 时不能当原生 plugin 装。详见 [docs/06_plugins.md](docs/06_plugins.md)。
+**Plugins 补充（兼容性标「低」＝不能 drop-in，但表内／文档有解法）：**  
+CC 开了 auto plugin ≠ Grok 每 session 自动注入。路线 **A**：上游有 Grok 包装才 `grok plugin install`（SessionStart always-on）；**B**：否则把 always-on 规则放进 `.grok/rules/`（开场自动载、免 slash）。无 Grok adapter 时不能当原生 plugin 装。详见 [docs/06_plugins.md](docs/06_plugins.md)。  
+**展望：** 若多数常用 plugin 都上 Grok marketplace（有正式 Grok 包装），兼容性可升到 **中～高**（仍非 100% 自动搬 CC 设置，但 A 会变常态、B 只当例外）。
 
 Memory 补充：bridge 日用**不**要求先开 `[memory] enabled=true` 才载得到指针——**rules 指针**随项目加载。产品 memory 要搜索／注入再开即可。
 
