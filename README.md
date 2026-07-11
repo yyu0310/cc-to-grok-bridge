@@ -23,12 +23,12 @@ Bridge **Claude Code** → **Grok Build**: reuse rules / skills, run the same ho
 | skill | High | Same ~/.claude/commands set (symlinks OK) | Minor frontmatter / trigger differences |
 | Hooks | High | Adapter + your CC hard-block scripts | Payload/deny translation; no full CC ask UI |
 | Memory | High | memory_sync + rules pointer + three-zone layout; optional push | Not the same as CC MEMORY.md index load; product search optional |
-| Plugins | Medium | A: install when Grok packaging exists; B: rules always-on (see note) | CC settings do not auto-port; different marketplaces |
+| Plugins | Low | A: install when Grok packaging exists; B: rules always-on (see note) | CC settings do not auto-port; different marketplaces |
 | MCP | Medium | Reinstall by type (HTTP key, OAuth, stdio); Notion/Google in docs | claude.ai cloud connectors not portable; secrets never auto-copied |
 
 **In practice:** moving a Claude Code setup onto **Grok Build** is usually much smoother than the Antigravity / Gemini bridge path (real hard-blocks + simpler memory). Always-on plugins still need a deliberate path.
 
-**Plugins note (Medium = works after migration, not drop-in):**  
+**Plugins note (Low = not drop-in; use path A or B):**  
 CC auto-enabled plugins ≠ Grok per-session injection. **A:** `grok plugin install` only when upstream has Grok packaging (SessionStart always-on). **B:** otherwise put always-on text in `.grok/rules/` (auto-load, no slash). See [docs/06_plugins.md](docs/06_plugins.md).
 
 Memory detail: bridge day-use does **not** require `[memory] enabled=true` first — the **rules pointer** loads with the project. Product memory improves search if you want it.

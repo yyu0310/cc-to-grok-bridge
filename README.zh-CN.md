@@ -23,12 +23,12 @@
 | skill | 高 | 同一套 ~/.claude/commands（含 symlink） | 少数缺 frontmatter 仍可用；触发细节可能不同 |
 | Hooks | 高 | adapter + 你的 CC 脚本硬挡 | payload／deny 要转；无完整 CC 式 ask UI |
 | Memory | 高 | memory_sync + rules 指针 + 三区隔离；可选 memory_push | 与 CC 载 MEMORY.md 索引机制不同；产品搜索是增强项 |
-| Plugins | 中 | A：有 Grok 包装再 install；B：rules always-on（见补充） | CC 设置不会自动过去；marketplace 不通 |
+| Plugins | 低 | A：有 Grok 包装再 install；B：rules always-on（见补充） | CC 设置不会自动过去；marketplace 不通 |
 | MCP | 中 | 按类型重装（HTTP key、OAuth、stdio）；Notion／Google 见文档 | claude.ai 云端 connector 不可携；secret 永不自动抄 |
 
 **实测体感：** 把 CC 环境导入 **Grok Build**，通常比走 Antigravity／Gemini 桥顺很多（有真 hook 硬挡、memory 也比较好处理）。Plugins always-on 仍是明显落差，要单独处理。
 
-**Plugins 补充（兼容性标「中」＝能用但要手动迁移）：**  
+**Plugins 补充（兼容性标「低」＝不能 drop-in，要走 A／B 迁移）：**  
 CC 开了 auto plugin ≠ Grok 每 session 自动注入。路线 **A**：上游有 Grok 包装才 `grok plugin install`（SessionStart always-on）；**B**：否则把 always-on 规则放进 `.grok/rules/`（开场自动载、免 slash）。无 Grok adapter 时不能当原生 plugin 装。详见 [docs/06_plugins.md](docs/06_plugins.md)。
 
 Memory 补充：bridge 日用**不**要求先开 `[memory] enabled=true` 才载得到指针——**rules 指针**随项目加载。产品 memory 要搜索／注入再开即可。
