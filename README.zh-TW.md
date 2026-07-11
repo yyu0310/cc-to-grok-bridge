@@ -21,7 +21,7 @@
 |----|--------|----------|------------------|
 | System Prompt | 高 | 同一份 workspace CLAUDE.md（Grok compat 自動載入） | — |
 | skill | 高 | 同一套 ~/.claude/commands（含 symlink） | 少數缺 frontmatter 仍可用；觸發細節可能不同 |
-| Hooks | 高 | adapter + 你的 CC 腳本硬擋 | payload／deny 要轉；無完整 CC 式 ask UI |
+| Hooks | 中 | adapter + 你的 CC 腳本硬擋 | payload／deny 要轉；無完整 CC 式 ask UI |
 | Memory | 高 | memory_sync + rules 指標 + 三區隔離；可選 memory_push | 與 CC 載 MEMORY.md 索引機制不同；產品搜尋是加強項 |
 | Plugins | 低 | A：有 Grok 包裝再 install；B：rules always-on（見補充） | CC 設定不會自動過去；marketplace 不相通 |
 | MCP | 中 | 依型態重裝（HTTP key、OAuth、stdio）；Notion／Google 見文檔 | claude.ai 雲端 connector 不可攜；secret 永不自動抄 |

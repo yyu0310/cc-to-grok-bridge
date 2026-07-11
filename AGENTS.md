@@ -24,7 +24,7 @@ This repo is a **thin bridge**: Claude Code stays the source of truth for rules,
 |--------|------------|--------|
 | System Prompt | High | Same workspace `CLAUDE.md` (compat) |
 | skill | High | Same `~/.claude/commands` (symlinks OK); minor frontmatter/trigger diffs |
-| Hooks | High, not 100% | Adapter for payload + deny; no full CC-style ask UI |
+| Hooks | Medium | Adapter for payload + deny; no full CC-style ask UI |
 | Memory | High | Pull + rules pointer + 3-zone layout; product search optional |
 | Plugins | Low | No auto-port of CC `enabledPlugins`; see docs/06_plugins.md |
 | MCP | Medium | Manual/AI-assisted per server; claude.ai cloud connectors not portable |
