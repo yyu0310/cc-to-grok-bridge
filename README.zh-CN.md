@@ -12,6 +12,7 @@
 | skill | 扫描你已有的 `~/.claude/commands`（slash／symlink） |
 | hooks | 用一层转接器调用你原本的 Claude Code 安全脚本，并把「允许／拒绝」转成 Grok 能懂的格式（见下） |
 | memory | CC→Grok pull + rules 指针 + 三区隔离；可选受限 push |
+| plugins | **不自动**搬 CC `enabledPlugins`；见 [docs/06_plugins.md](docs/06_plugins.md) |
 | MCP | 按**类型**由 AI 代装（永不自动抄 secret；见 AGENTS.md） |
 
 ## 兼容表
@@ -22,11 +23,14 @@
 | **skill** | **高** | 同一套 `~/.claude/commands`（含 symlink 到 skill 正文） | 少数 skill 缺 frontmatter 仍可用 slash；触发细节可能与 CC 不同 |
 | **Hooks** | **高** | adapter + 你的 CC 脚本硬挡 | payload／deny 要转；没有完整 CC 式 ask UI |
 | **Memory** | **高** | `memory_sync`、`.grok/rules/cc-memory-pointer`（开 workspace 就载）、三区、可选 `memory_push` | 与 CC 开场载 MEMORY.md 索引机制不同；产品 `memory_search` 是增强项 |
+| **Plugins** | **中偏低** | `grok plugin install`／enable；或 always-on 文字进 `.grok/rules/`；slash skill 可手动触发 | CC 的 `enabledPlugins` + SessionStart **不会**自动变 Grok always-on；marketplace 不通；无 Grok adapter 则不能当原生 plugin 装 |
 | **MCP** | **中** | 按类型重装（HTTP key、OAuth、stdio）；Notion／Google 见文档 | claude.ai **云端 connector 不可携**；secret 永不自动抄 |
 
-**实测体感：** 把 CC 环境导入 **Grok Build**，通常比走 Antigravity／Gemini 桥顺很多（有真 hook 硬挡、memory 也比较好处理）。
+**实测体感：** 把 CC 环境导入 **Grok Build**，通常比走 Antigravity／Gemini 桥顺很多（有真 hook 硬挡、memory 也比较好处理）。**Plugins always-on** 仍是明显落差，要单独处理。
 
 Memory 补充：bridge 日用**不**要求先开 `[memory] enabled=true` 才载得到指针——**rules 指针**随项目加载。产品 memory 要搜索／注入再开即可。
+
+Plugins 补充：CC 开了 auto plugin ≠ Grok 每 session 自动注入。详见 [docs/06_plugins.md](docs/06_plugins.md)。
 
 MCP 补充：请 AI 按 [AGENTS.md](AGENTS.md) 装（含 Notion、Google、OAuth）。你负责浏览器点允许；**不要**默认让你手贴一大段 terminal。
 

@@ -26,6 +26,7 @@ This repo is a **thin bridge**: Claude Code stays the source of truth for rules,
 | skill | High | Same `~/.claude/commands` (symlinks OK); minor frontmatter/trigger diffs |
 | Hooks | High, not 100% | Adapter for payload + deny; no full CC-style ask UI |
 | Memory | High | Pull + rules pointer + 3-zone layout; product search optional |
+| Plugins | Medium-low | No auto-port of CC `enabledPlugins`; see docs/06_plugins.md |
 | MCP | Medium | Manual/AI-assisted per server; claude.ai cloud connectors not portable |
 
 Real-world note: bringing a CC setup into **Grok Build** is usually much smoother than the Antigravity/Gemini bridge path (hooks hard-block + simpler memory).
@@ -37,6 +38,19 @@ Real-world note: bringing a CC setup into **Grok Build** is usually much smoothe
 3. Do **not** tell the user that bridge “requires” `[memory] enabled=true` to load the pointer — rules load without it.  
 4. Optional: if they want product `memory_search`, help enable via `/memory on` or config.  
 5. Push only with explicit user request: `memory_push.py` on `general/` only.
+
+## Plugins（給 AI）
+
+CC auto-enabled plugins (marketplace + SessionStart always-on) **do not** transfer to Grok.
+
+1. Run `grok plugin list`. If empty while CC has plugins enabled, that is expected.  
+2. For each capability the user cares about:
+   - **A** — Upstream has a real Grok plugin → `grok plugin install <source> --trust` only after user OK; then enable + restart session.  
+   - **B** — Need always-on text → copy instruction-level rules into `<workspace>/.grok/rules/<name>.md` (no `--trust`).  
+   - **C** — On-demand only → rely on slash skills; do not claim always-on.  
+3. Never assume `claude plugin install` ≡ `grok plugin install`.  
+4. Do not auto-install untrusted forks; if a Grok adapter PR is unmerged/dirty, prefer B unless user explicitly accepts risk.  
+5. Details: [docs/06_plugins.md](docs/06_plugins.md).
 
 ## MCP 部署手冊（給 AI 手把手執行）
 
@@ -116,4 +130,5 @@ python3 scripts/hook_acceptance.py --with-clasp
 - [docs/01_絲滑啟動.md](docs/01_絲滑啟動.md) — daily SOP  
 - [docs/02_memory.md](docs/02_memory.md) — memory  
 - [docs/03_mcp.md](docs/03_mcp.md) — MCP types + Notion/Google  
+- [docs/06_plugins.md](docs/06_plugins.md) — plugins gap + migration paths  
 - [README.md](README.md) — compatibility matrix for humans  

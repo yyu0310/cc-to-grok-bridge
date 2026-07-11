@@ -12,6 +12,7 @@ Bridge **Claude Code** → **Grok Build**: reuse rules / skills, run the same ho
 | skill | Reuse `~/.claude/commands` slash skills (including symlinks) |
 | Hooks | Call your existing Claude Code security scripts through a thin adapter that translates allow/deny for Grok (see below) |
 | Memory | CC → Grok pull + rules pointer + three-zone isolation; optional constrained push |
+| Plugins | Does **not** auto-port CC `enabledPlugins`; see [docs/06_plugins.md](docs/06_plugins.md) |
 | MCP | AI-assisted install by **server type** (never auto-copy secrets; see AGENTS.md) |
 
 ## Compatibility matrix
@@ -22,11 +23,14 @@ Bridge **Claude Code** → **Grok Build**: reuse rules / skills, run the same ho
 | **skill** | **High** | Same `~/.claude/commands` set (including symlinked skill bodies) | A few skills may lack frontmatter but slash still works; trigger details can differ from CC |
 | **Hooks** | **High** | Hard blocks via adapter + your CC scripts | Payload/deny need adapter; no full CC-style ask UI |
 | **Memory** | **High** | `memory_sync`, `cc-memory-pointer` in `.grok/rules/` (loads with the workspace), `_from_cc` / `general` / `grok`, optional `memory_push` | Not the same loader as CC’s MEMORY.md index; product `memory_search` is optional enhancement |
+| **Plugins** | **Medium-low** | `grok plugin install` / enable; always-on text via `.grok/rules/`; slash skills on demand | CC `enabledPlugins` + SessionStart do **not** auto-become Grok always-on; marketplaces differ; no Grok adapter ⇒ not a native Grok plugin |
 | **MCP** | **Medium** | Reinstall per type (HTTP key, OAuth, stdio); Notion / Google guides in docs | claude.ai **cloud connectors** are not portable; secrets never auto-copied |
 
-**In practice:** moving a Claude Code setup onto **Grok Build** is usually much smoother than the Antigravity / Gemini bridge path (real hook hard-blocks + simpler memory).
+**In practice:** moving a Claude Code setup onto **Grok Build** is usually much smoother than the Antigravity / Gemini bridge path (real hook hard-blocks + simpler memory). **Always-on plugins** remain a gap and need a deliberate path.
 
 Memory detail: bridge day-use does **not** depend on forcing `[memory] enabled=true` first — the **rules pointer** loads with the project. Turning on product memory improves search/injection if you want it.
+
+Plugins detail: CC auto-enabled plugins ≠ Grok per-session injection. See [docs/06_plugins.md](docs/06_plugins.md).
 
 MCP detail: ask an AI coding agent to follow [AGENTS.md](AGENTS.md) (Notion, Google, OAuth). You approve the browser; you should not be asked to paste long terminal homework.
 
@@ -86,7 +90,7 @@ Then open Grok from that workspace and restart the session so hooks reload.
 | `scripts/bridge_doctor.py` | Read-only health check + hard-block smoke |
 | `scripts/hook_acceptance.py` | Adapter-layer acceptance tests |
 | `architecture.md` | Design invariants (source of truth for “why”) |
-| `docs/` | Gap matrix, day-to-day SOP, memory, MCP, harness table |
+| `docs/` | Gap matrix, day-to-day SOP, memory, MCP, plugins, harness table |
 
 ## Security
 

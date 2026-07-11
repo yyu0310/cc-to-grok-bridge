@@ -12,6 +12,7 @@
 | skill | 掃你既有的 `~/.claude/commands`（slash／symlink） |
 | hooks | 用一層轉接器呼叫你原本的 Claude Code 安全腳本，並把「允許／拒絕」轉成 Grok 看得懂的格式（見下） |
 | memory | CC→Grok pull + rules 指標 + 三區隔離；可選受限 push |
+| plugins | **不自動**搬 CC `enabledPlugins`；見 [docs/06_plugins.md](docs/06_plugins.md)（Grok 原生裝／rules 備援／只當 skill） |
 | MCP | 依**型態**由 AI 代裝（永不自動抄 secret；見 AGENTS.md） |
 
 ## 相容表
@@ -22,11 +23,14 @@
 | **skill** | **高** | 同一套 `~/.claude/commands`（含 symlink 到 skill 正文） | 少數 skill 缺 frontmatter 仍可用 slash；語法／觸發與 CC 細節可能不同 |
 | **Hooks** | **高** | adapter + 你的 CC 腳本硬擋 | payload／deny 要轉；沒有完整 CC 式 ask UI |
 | **Memory** | **高** | `memory_sync`、`.grok/rules/cc-memory-pointer`（開 workspace 就載）、`_from_cc`／`general`／`grok`、可選 `memory_push` | 與 CC 開場載 MEMORY.md 索引的機制不同；產品 `memory_search` 是加強項 |
+| **Plugins** | **中偏低** | `grok plugin install`／enable；或把 always-on 文字放進 `.grok/rules/`；slash skill 可手動觸發 | CC 的 `enabledPlugins` + SessionStart **不會**自動變成 Grok always-on；marketplace 不相通；上游若無 Grok adapter 不能當原生 plugin 裝 |
 | **MCP** | **中** | 依型態重裝（HTTP key、OAuth、stdio）；Notion／Google 見文檔 | claude.ai **雲端 connector 不可攜**；secret 永不自動抄 |
 
-**實測體感：** 把 CC 環境導入 **Grok Build**，通常比走 Antigravity／Gemini 橋順很多（有真 hook 硬擋、memory 也比較好處理）。
+**實測體感：** 把 CC 環境導入 **Grok Build**，通常比走 Antigravity／Gemini 橋順很多（有真 hook 硬擋、memory 也比較好處理）。**Plugins always-on** 仍是明顯落差，要單獨處理。
 
 Memory 補充：bridge 日用**不**要求先開 `[memory] enabled=true` 才載得到指標——**rules 指標**隨專案載入。產品 memory 要搜尋／注入再開即可。
+
+Plugins 補充：CC 開了 auto plugin ≠ Grok 每 session 自動注入。詳見 [docs/06_plugins.md](docs/06_plugins.md)。
 
 MCP 補充：請 AI 照 [AGENTS.md](AGENTS.md) 裝（含 Notion、Google、OAuth）。你負責瀏覽器按允許；**不要**預設叫你手貼一大段 terminal。
 
@@ -86,7 +90,7 @@ python3 scripts/bridge_doctor.py --workspace "$CC_GROK_WORKSPACE"   # 應 fails=
 | `scripts/bridge_doctor.py` | 唯讀健檢 + 硬擋煙測 |
 | `scripts/hook_acceptance.py` | adapter 層驗收 |
 | `architecture.md` | 架構不變量（「為什麼」的單一真相） |
-| `docs/` | 差距矩陣、日用 SOP、memory、MCP、harness 表 |
+| `docs/` | 差距矩陣、日用 SOP、memory、MCP、plugins、harness 表 |
 
 ## 安全
 

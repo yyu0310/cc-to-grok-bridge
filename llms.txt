@@ -5,6 +5,7 @@
 ## Facts
 
 - System Prompt: same workspace CLAUDE.md (compat). skill: ~/.claude/commands (separate from system prompt).
+- Plugins: CC enabledPlugins / SessionStart always-on do not auto-port. Paths: grok plugin install, .grok/rules instruction-level, or slash-only. See docs/06_plugins.md.
 - Hooks: thin adapter for payload field names and deny protocol; CC hook script bodies stay source of truth.
 - Memory: day-use is high-fit — memory_sync + .grok/rules/cc-memory-pointer (loads with workspace rules). Product memory search is optional; bridge does not require [memory] enabled=true just to load the pointer.
 - Memory layout: _from_cc / general / grok isolation; optional memory_push for general/ only.
@@ -27,3 +28,4 @@
 - [AGENTS.md](AGENTS.md): AI install playbooks (MCP Notion/Google/OAuth)
 - [docs/02_memory.md](docs/02_memory.md): memory
 - [docs/03_mcp.md](docs/03_mcp.md): MCP types
+- [docs/06_plugins.md](docs/06_plugins.md): plugins gap and migration
