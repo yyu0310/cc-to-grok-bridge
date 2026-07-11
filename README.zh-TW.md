@@ -17,20 +17,21 @@
 
 ## 相容表
 
-| 域 | 日用相容 | 能怎麼用 | 不是 100% 的地方 |
-|----|----------|----------|------------------|
-| **System Prompt** | **高** | 同一份 workspace `CLAUDE.md`（Grok compat 自動載入） | — |
-| **skill** | **高** | 同一套 `~/.claude/commands`（含 symlink 到 skill 正文） | 少數 skill 缺 frontmatter 仍可用 slash；語法／觸發與 CC 細節可能不同 |
-| **Hooks** | **高** | adapter + 你的 CC 腳本硬擋 | payload／deny 要轉；沒有完整 CC 式 ask UI |
-| **Memory** | **高** | `memory_sync`、`.grok/rules/cc-memory-pointer`（開 workspace 就載）、`_from_cc`／`general`／`grok`、可選 `memory_push` | 與 CC 開場載 MEMORY.md 索引的機制不同；產品 `memory_search` 是加強項 |
-| **Plugins** | **中偏低** | **A** 有 Grok 包裝才 `grok plugin install`（SessionStart always-on）；**B** 否則把 always-on 規則放進 `.grok/rules/`（開場自動載、免 slash） | CC 的 `enabledPlugins` + SessionStart **不會**自動過去；marketplace 不相通；無 Grok adapter 時 A 未就緒 |
-| **MCP** | **中** | 依型態重裝（HTTP key、OAuth、stdio）；Notion／Google 見文檔 | claude.ai **雲端 connector 不可攜**；secret 永不自動抄 |
+| 域 | 相容性 | 能怎麼用 | 不是 100% 的地方 |
+|----|--------|----------|------------------|
+| System Prompt | 高 | 同一份 workspace CLAUDE.md（Grok compat 自動載入） | — |
+| skill | 高 | 同一套 ~/.claude/commands（含 symlink） | 少數缺 frontmatter 仍可用；觸發細節可能不同 |
+| Hooks | 高 | adapter + 你的 CC 腳本硬擋 | payload／deny 要轉；無完整 CC 式 ask UI |
+| Memory | 高 | memory_sync + rules 指標 + 三區隔離；可選 memory_push | 與 CC 載 MEMORY.md 索引機制不同；產品搜尋是加強項 |
+| Plugins | 中 | A：有 Grok 包裝再 install；B：rules always-on（見補充） | CC 設定不會自動過去；marketplace 不相通 |
+| MCP | 中 | 依型態重裝（HTTP key、OAuth、stdio）；Notion／Google 見文檔 | claude.ai 雲端 connector 不可攜；secret 永不自動抄 |
 
-**實測體感：** 把 CC 環境導入 **Grok Build**，通常比走 Antigravity／Gemini 橋順很多（有真 hook 硬擋、memory 也比較好處理）。**Plugins always-on** 仍是明顯落差，要單獨處理。
+**實測體感：** 把 CC 環境導入 **Grok Build**，通常比走 Antigravity／Gemini 橋順很多（有真 hook 硬擋、memory 也比較好處理）。Plugins always-on 仍是明顯落差，要單獨處理。
+
+**Plugins 補充（相容性標「中」＝能用但要手動遷移）：**  
+CC 開了 auto plugin ≠ Grok 每 session 自動注入。路線 **A**：上游有 Grok 包裝才 `grok plugin install`（SessionStart always-on）；**B**：否則把 always-on 規則放進 `.grok/rules/`（開場自動載、免 slash）。無 Grok adapter 時不能當原生 plugin 裝。詳見 [docs/06_plugins.md](docs/06_plugins.md)。
 
 Memory 補充：bridge 日用**不**要求先開 `[memory] enabled=true` 才載得到指標——**rules 指標**隨專案載入。產品 memory 要搜尋／注入再開即可。
-
-Plugins 補充：CC 開了 auto plugin ≠ Grok 每 session 自動注入。詳見 [docs/06_plugins.md](docs/06_plugins.md)。
 
 MCP 補充：請 AI 照 [AGENTS.md](AGENTS.md) 裝（含 Notion、Google、OAuth）。你負責瀏覽器按允許；**不要**預設叫你手貼一大段 terminal。
 

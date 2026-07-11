@@ -17,20 +17,21 @@ Bridge **Claude Code** → **Grok Build**: reuse rules / skills, run the same ho
 
 ## Compatibility matrix
 
-| Domain | Day-to-day fit | What works | What is not 100% |
-|--------|----------------|------------|------------------|
-| **System Prompt** | **High** | Same workspace `CLAUDE.md` (Grok compat auto-load) | — |
-| **skill** | **High** | Same `~/.claude/commands` set (including symlinked skill bodies) | A few skills may lack frontmatter but slash still works; trigger details can differ from CC |
-| **Hooks** | **High** | Hard blocks via adapter + your CC scripts | Payload/deny need adapter; no full CC-style ask UI |
-| **Memory** | **High** | `memory_sync`, `cc-memory-pointer` in `.grok/rules/` (loads with the workspace), `_from_cc` / `general` / `grok`, optional `memory_push` | Not the same loader as CC’s MEMORY.md index; product `memory_search` is optional enhancement |
-| **Plugins** | **Medium-low** | **A** native `grok plugin install` when Grok packaging exists (SessionStart always-on); **B** else always-on rules in `.grok/rules/` (auto-load, no slash) | CC `enabledPlugins` + SessionStart do **not** auto-port; marketplaces differ; no Grok adapter ⇒ A not ready yet |
-| **MCP** | **Medium** | Reinstall per type (HTTP key, OAuth, stdio); Notion / Google guides in docs | claude.ai **cloud connectors** are not portable; secrets never auto-copied |
+| Domain | Compatibility | What works | Gaps |
+|--------|---------------|------------|------|
+| System Prompt | High | Same workspace CLAUDE.md (Grok compat auto-load) | — |
+| skill | High | Same ~/.claude/commands set (symlinks OK) | Minor frontmatter / trigger differences |
+| Hooks | High | Adapter + your CC hard-block scripts | Payload/deny translation; no full CC ask UI |
+| Memory | High | memory_sync + rules pointer + three-zone layout; optional push | Not the same as CC MEMORY.md index load; product search optional |
+| Plugins | Medium | A: install when Grok packaging exists; B: rules always-on (see note) | CC settings do not auto-port; different marketplaces |
+| MCP | Medium | Reinstall by type (HTTP key, OAuth, stdio); Notion/Google in docs | claude.ai cloud connectors not portable; secrets never auto-copied |
 
-**In practice:** moving a Claude Code setup onto **Grok Build** is usually much smoother than the Antigravity / Gemini bridge path (real hook hard-blocks + simpler memory). **Always-on plugins** remain a gap and need a deliberate path.
+**In practice:** moving a Claude Code setup onto **Grok Build** is usually much smoother than the Antigravity / Gemini bridge path (real hard-blocks + simpler memory). Always-on plugins still need a deliberate path.
 
-Memory detail: bridge day-use does **not** depend on forcing `[memory] enabled=true` first — the **rules pointer** loads with the project. Turning on product memory improves search/injection if you want it.
+**Plugins note (Medium = works after migration, not drop-in):**  
+CC auto-enabled plugins ≠ Grok per-session injection. **A:** `grok plugin install` only when upstream has Grok packaging (SessionStart always-on). **B:** otherwise put always-on text in `.grok/rules/` (auto-load, no slash). See [docs/06_plugins.md](docs/06_plugins.md).
 
-Plugins detail: CC auto-enabled plugins ≠ Grok per-session injection. See [docs/06_plugins.md](docs/06_plugins.md).
+Memory detail: bridge day-use does **not** require `[memory] enabled=true` first — the **rules pointer** loads with the project. Product memory improves search if you want it.
 
 MCP detail: ask an AI coding agent to follow [AGENTS.md](AGENTS.md) (Notion, Google, OAuth). You approve the browser; you should not be asked to paste long terminal homework.
 
