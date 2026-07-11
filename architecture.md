@@ -82,7 +82,7 @@ CC 典型會載入：
 | 繁中／反共匪用語偏好 | `.grok/rules/language.md` | **否** |
 | 禁止動 CC 系統檔 | `.grok/rules/00_cc_system_boundary.md` | **否** |
 | memory 路徑指標 | `.grok/rules/cc-memory-pointer.md` | **否** |
-| CC→Grok 鏡像全文 | `~/.grok/memory/VS-Project-*/` | **否**（除非有人再 push 進 CC） |
+| CC→Grok 鏡像全文 | `~/.grok/memory/<slug>-*/` | **否**（除非有人再 push 進 CC） |
 | 共享核心 | `CLAUDE.md` | **是**（兩邊都要） |
 
 > 「Grok 特有 rule／memory 不佔 Claude 上下文」＝ **只寫進 `.grok/` 與 `~/.grok/`，永不寫進 CLAUDE.md，且未核准前不 push 進 CC memory 源。**
@@ -158,7 +158,7 @@ cc-to-grok-bridge/
 | `~/.grok/hooks/cc-bridge-session-pull.json` | install_session_pull | SessionStart → bridge_pull |
 | `~/.grok/config.toml` `[compat.claude] hooks=false` | install | 避免與 bridge 雙跑 |
 | `~/.grok/config.toml` `[memory]` | 可選 | Grok 產品 memory；**與 CC 上下文無關** |
-| `~/.grok/memory/VS-Project-<hash8>/` | memory_sync | CC 的 **鏡像**（副本） |
+| `~/.grok/memory/<slug>-<hash8>/` | memory_sync | CC 的 **鏡像**（副本） |
 | `~/.grok/memory/MEMORY.md` | Grok `/remember` | Grok **全域**小記；**不要**當 CC 索引覆寫目標 |
 | `<ws>/.grok/rules/*.md` | 人／腳本 | **Grok-only** 規則 |
 
@@ -322,7 +322,7 @@ updated: 2026-07-11
 ### 6.6 推薦目錄硬隔離（比純標籤更穩）
 
 ```
-~/.grok/memory/VS-Project-xxx/
+~/.grok/memory/<slug>-<hash8>/
   _from_cc/           # pull 進來的純鏡像（唯讀心智：可被 pull 覆蓋）
   general/            # Grok 寫的、允許候選 push → CC
   grok/               # Grok-only，永不 push

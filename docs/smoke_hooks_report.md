@@ -14,7 +14,7 @@
 | bridge JSON | `~/.grok/hooks/cc-bridge-hooks.json` |
 | compat | `[compat.claude] hooks = false` |
 | 腳本本體 | `~/.claude/hooks/*.sh`（未改） |
-| 產品 memory | `[memory] enabled = true` |
+| 產品 memory | 可選；bridge 日用主靠 rules pointer（本機環境可能已 enable） |
 | 驗收腳本 | `scripts/hook_acceptance.py` |
 | doctor | `scripts/bridge_doctor.py` → **全綠** |
 

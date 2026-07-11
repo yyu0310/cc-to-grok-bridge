@@ -1,33 +1,29 @@
 # cc-to-grok-bridge
 
-> Thin bridge so Grok Build reuses Claude Code (CC) assets: rules, skills, hooks, optional memory mirror.
+> Thin bridge so Grok Build reuses Claude Code (CC) assets: rules, skills, hooks, memory mirror, MCP reinstall guidance.
 
 ## Facts
 
 - Grok can load the same project CLAUDE.md and ~/.claude/commands skills when configured.
-- Bridge focuses on hook stdin field differences and deny protocol translation via scripts/hook_adapter.py.
-- Single source of truth: CC skill bodies and ~/.claude/hooks scripts; do not fork them into this repo.
-- install_bridge.py writes ~/.grok/hooks/cc-bridge-hooks.json and should disable double-firing CC hooks in Grok config.
-- Memory: optional one-way CC → Grok with hard isolation (_from_cc / general / grok). See docs/02_memory.md.
-- MCP: documentation only; never auto-copy secrets.
+- Hooks: thin adapter for payload field names and deny protocol; CC hook script bodies stay source of truth.
+- Memory: day-use is high-fit — memory_sync + .grok/rules/cc-memory-pointer (loads with workspace rules). Product memory search is optional; bridge does not require [memory] enabled=true just to load the pointer.
+- Memory layout: _from_cc / general / grok isolation; optional memory_push for general/ only.
+- MCP: never auto-copy secrets. Reinstall by type (API-key HTTP, OAuth, stdio). claude.ai cloud connectors are not portable. Notion and Google handoff in docs/03_mcp.md and AGENTS.md — AI runs commands; user does browser consent.
+- In practice, CC → Grok Build is usually smoother than Antigravity/Gemini bridges.
 
 ## Commands
 
 - python3 scripts/install_bridge.py
 - python3 scripts/memory_sync.py --workspace ~/path/to/your-workspace
 - python3 scripts/bridge_doctor.py --workspace ~/path/to/your-workspace
-- python3 scripts/hook_acceptance.py
+- python3 scripts/hook_acceptance.py --with-clasp
 
 ## Docs
 
-- [README.md](README.md): English overview and quick start
+- [README.md](README.md): English overview, compatibility matrix
 - [README.zh-TW.md](README.zh-TW.md): Traditional Chinese
 - [README.zh-CN.md](README.zh-CN.md): Simplified Chinese
 - [architecture.md](architecture.md): design invariants
-- [docs/00_差距矩陣.md](docs/00_差距矩陣.md): CC vs Grok gap matrix
-- [docs/01_絲滑啟動.md](docs/01_絲滑啟動.md): day-to-day SOP
-- [docs/02_memory.md](docs/02_memory.md): memory sync
-- [docs/03_mcp.md](docs/03_mcp.md): MCP migration
-- [docs/04_harness_參數表.md](docs/04_harness_參數表.md): harness parameter table
-- [docs/05_dynamic_bidirectional_sync.md](docs/05_dynamic_bidirectional_sync.md): dynamic sync design
-- [AGENTS.md](AGENTS.md): instructions for AI coding assistants
+- [AGENTS.md](AGENTS.md): AI install playbooks (MCP Notion/Google/OAuth)
+- [docs/02_memory.md](docs/02_memory.md): memory
+- [docs/03_mcp.md](docs/03_mcp.md): MCP types

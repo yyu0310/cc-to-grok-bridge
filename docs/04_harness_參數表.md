@@ -20,7 +20,7 @@
 | **hooks stdin** | `tool_name` + `tool_input`（snake） | 文件示例 `toolName` + `toolInput`；adapter 正規化 | |
 | **hooks 拒絕** | exit `2` + **stderr** 理由 | stdout `{"decision":"deny","reason"}` 或 exit 2；adapter 翻譯 | |
 | **memory 路徑** | `~/.claude/projects/<hash>/memory/` | `~/.grok/memory/`（全域 MEMORY.md + `<slug>-<hash8>/`） | |
-| **memory 載入** | 開場 MEMORY.md 200 行/25KB | 需 enable；search/index；bridge 另寫 rules pointer | |
+| **memory 載入** | 開場 MEMORY.md 200 行/25KB | **rules pointer 必載**；產品 search/index 可選 enable | |
 | **memory 同步策略** | SoT | **單向 CC→Grok** `memory_sync.py`，CC 蓋同名檔 | |
 | **MCP 設定位置** | `~/.claude.json` user/projects；claude.ai 雲端 connectors | `config.toml` `[mcp_servers.*]`；CLI `grok mcp` | |
 | **MCP 遷移** | 四分類（key/OAuth/雲端/CLI） | 見 `docs/03_mcp.md`；key 人搬、雲端不可攜 | |

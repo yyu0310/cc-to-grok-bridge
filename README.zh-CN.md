@@ -10,8 +10,23 @@
 |----|----------|
 | 规则／skill | 让 Grok 使用你已有的 `CLAUDE.md` 与 `~/.claude/commands` |
 | hooks | 用一层转接器调用你原本的 Claude Code 安全脚本，并把「允许／拒绝」转成 Grok 能懂的格式（见下） |
-| memory | 可选单向镜像：CC → Grok（`_from_cc`／`general`／`grok` 硬隔离） |
-| MCP | 只提供迁移手册 — **永不**自动搬 API key／OAuth |
+| memory | CC→Grok pull + rules 指针 + 三区隔离；可选受限 push |
+| MCP | 按**类型**由 AI 代装（永不自动抄 secret；见 AGENTS.md） |
+
+## 兼容表
+
+| 域 | 日用兼容 | 能怎么用 | 不是 100% 的地方 |
+|----|----------|----------|------------------|
+| **规则／skill** | **高** | 同一份 `CLAUDE.md`、同一套 `~/.claude/commands` | — |
+| **Hooks** | **高** | adapter + 你的 CC 脚本硬挡 | payload／deny 要转；没有完整 CC 式 ask UI |
+| **Memory** | **高** | `memory_sync`、`.grok/rules/cc-memory-pointer`（开 workspace 就载）、三区、可选 `memory_push` | 与 CC 开场载 MEMORY.md 索引机制不同；产品 `memory_search` 是增强项 |
+| **MCP** | **中** | 按类型重装（HTTP key、OAuth、stdio）；Notion／Google 见文档 | claude.ai **云端 connector 不可携**；secret 永不自动抄 |
+
+**实测体感：** 把 CC 环境导入 **Grok Build**，通常比走 Antigravity／Gemini 桥顺很多（有真 hook 硬挡、memory 也比较好处理）。
+
+Memory 补充：bridge 日用**不**要求先开 `[memory] enabled=true` 才载得到指针——**rules 指针**随项目加载。产品 memory 要搜索／注入再开即可。
+
+MCP 补充：请 AI 按 [AGENTS.md](AGENTS.md) 装（含 Notion、Google、OAuth）。你负责浏览器点允许；**不要**默认让你手贴一大段 terminal。
 
 ### hooks 转接器在干什么（白话）
 
@@ -79,10 +94,9 @@ python3 scripts/bridge_doctor.py --workspace "$CC_GROK_WORKSPACE"   # 应 fails=
 
 ## 限制
 
-1. MCP key／OAuth：人工；见 `docs/03_mcp.md`
-2. claude.ai 云端 connectors 不可移植
-3. Grok 全局 `MEMORY.md` ≠ CC 项目 memory；sync 写入项目子目录
-4. 安装后需从 workspace 根重开 Grok session
+1. MCP：secret 不自动抄；claude.ai 云端 connector 不可携 — 见 [docs/03_mcp.md](docs/03_mcp.md)／[AGENTS.md](AGENTS.md)
+2. Grok 全局 `~/.grok/memory/MEMORY.md`（`/remember`）≠ CC 项目 memory；sync 写项目子目录
+3. 安装后需从 workspace 根重开 Grok session
 
 ## 许可
 

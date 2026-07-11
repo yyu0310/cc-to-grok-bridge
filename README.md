@@ -10,8 +10,23 @@ Bridge **Claude Code** → **Grok Build**: reuse rules / skills, run the same ho
 |-------|----------------------|
 | Rules / skills | Point Grok at the same `CLAUDE.md` + `~/.claude/commands` you already use |
 | Hooks | Call your existing Claude Code security scripts through a thin adapter that translates allow/deny for Grok (see below) |
-| Memory | Optional one-way mirror: CC → Grok (`_from_cc` / `general` / `grok` isolation) |
-| MCP | Docs only — never auto-copy API keys or OAuth tokens |
+| Memory | CC → Grok pull + rules pointer + three-zone isolation; optional constrained push |
+| MCP | AI-assisted install by **server type** (never auto-copy secrets; see AGENTS.md) |
+
+## Compatibility matrix
+
+| Domain | Day-to-day fit | What works | What is not 100% |
+|--------|----------------|------------|------------------|
+| **Rules / skills** | **High** | Same `CLAUDE.md`, same `~/.claude/commands` | — |
+| **Hooks** | **High** | Hard blocks via adapter + your CC scripts | Payload/deny need adapter; no full CC-style ask UI |
+| **Memory** | **High** | `memory_sync`, `cc-memory-pointer` in `.grok/rules/` (loads with the workspace), `_from_cc` / `general` / `grok`, optional `memory_push` | Not the same loader as CC’s MEMORY.md index; product `memory_search` is optional enhancement |
+| **MCP** | **Medium** | Reinstall per type (HTTP key, OAuth, stdio); Notion / Google guides in docs | claude.ai **cloud connectors** are not portable; secrets never auto-copied |
+
+**In practice:** moving a Claude Code setup onto **Grok Build** is usually much smoother than the Antigravity / Gemini bridge path (real hook hard-blocks + simpler memory).
+
+Memory detail: bridge day-use does **not** depend on forcing `[memory] enabled=true` first — the **rules pointer** loads with the project. Turning on product memory improves search/injection if you want it.
+
+MCP detail: ask an AI coding agent to follow [AGENTS.md](AGENTS.md) (Notion, Google, OAuth). You approve the browser; you should not be asked to paste long terminal homework.
 
 ### What the hook adapter does (plain language)
 
@@ -79,10 +94,9 @@ Then open Grok from that workspace and restart the session so hooks reload.
 
 ## Limitations
 
-1. MCP keys / OAuth: human-only; see `docs/03_mcp.md`
-2. claude.ai cloud connectors are not portable
-3. Product Grok memory (`~/.grok/memory/MEMORY.md`) is not the same as CC project memory; sync writes a project subfolder
-4. After install, restart the Grok session from the workspace root
+1. MCP: secrets never auto-copied; claude.ai cloud connectors not portable — reinstall via [docs/03_mcp.md](docs/03_mcp.md) / [AGENTS.md](AGENTS.md)
+2. Global Grok `~/.grok/memory/MEMORY.md` (`/remember`) ≠ CC project memory; sync uses a project subfolder
+3. After install, restart the Grok session from the workspace root
 
 ## License
 
