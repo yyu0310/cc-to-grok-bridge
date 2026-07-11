@@ -2,7 +2,8 @@
 
 > 對照：你自己的 Claude Code hook 文檔  
 > 日期：2026-07-11（晚間完整重跑）  
-> 開源版：路徑已泛化
+> 再開：2026-07-11 開源脫敏後全數重跑 — 本體與開源 scripts 皆 **22/22 PASS** + doctor fails=0（含 `--with-clasp` 真 push）  
+> 開源版：路徑已泛化；全數 QA 請設 `CC_GROK_WORKSPACE`／可選 `CC_GROK_CLASP_SANDBOX`
 
 ## 環境
 

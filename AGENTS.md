@@ -16,14 +16,25 @@ This repo is a **thin bridge**: Claude Code stays the source of truth for rules,
 - Commit `.env`, real MCP tokens, or personal vault paths.
 - Push to any company GitHub org; personal public repos only when the user asks.
 
-## Verify
+## Verify（hook／adapter 改完必跑 — 全數，不是煙測）
+
+改 `hook_adapter.py`、Grok-only gate、`install_bridge` 產物或任何會影響 deny／payload 的邏輯後，**必須**跑完整套，不可只跑 doctor 裡的單元煙測就當過：
 
 ```bash
-python3 scripts/bridge_doctor.py --workspace ~/path/to/your-workspace
-python3 scripts/hook_acceptance.py
+export CC_GROK_WORKSPACE=~/path/to/your-workspace
+# 若本機有 clasp sandbox 要驗真 push：
+# export CC_GROK_CLASP_SANDBOX=~/path/to/clasp-run-sandbox
+
+python3 scripts/bridge_doctor.py --workspace "$CC_GROK_WORKSPACE"
+python3 scripts/hook_acceptance.py --with-clasp   # 全數；無 sandbox 時可先不加 --with-clasp 再補
 ```
 
-Expect doctor `fails=0` when the user’s CC hooks and Grok install are healthy.
+判定：
+
+- doctor：`fails=0`（全綠）
+- acceptance：列印 `=== N/N PASS ===` 且 exit 0（含 adapter 單元、敏感讀、memory gate、lifecycle、可選真 clasp）
+
+未過不准宣稱 DONE，不准 push。
 
 ## Key docs
 
