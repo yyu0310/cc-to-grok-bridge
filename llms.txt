@@ -1,0 +1,33 @@
+# cc-to-grok-bridge
+
+> Thin bridge so Grok Build reuses Claude Code (CC) assets: rules, skills, hooks, optional memory mirror.
+
+## Facts
+
+- Grok can load the same project CLAUDE.md and ~/.claude/commands skills when configured.
+- Bridge focuses on hook stdin field differences and deny protocol translation via scripts/hook_adapter.py.
+- Single source of truth: CC skill bodies and ~/.claude/hooks scripts; do not fork them into this repo.
+- install_bridge.py writes ~/.grok/hooks/cc-bridge-hooks.json and should disable double-firing CC hooks in Grok config.
+- Memory: optional one-way CC → Grok with hard isolation (_from_cc / general / grok). See docs/02_memory.md.
+- MCP: documentation only; never auto-copy secrets.
+
+## Commands
+
+- python3 scripts/install_bridge.py
+- python3 scripts/memory_sync.py --workspace ~/path/to/your-workspace
+- python3 scripts/bridge_doctor.py --workspace ~/path/to/your-workspace
+- python3 scripts/hook_acceptance.py
+
+## Docs
+
+- [README.md](README.md): English overview and quick start
+- [README.zh-TW.md](README.zh-TW.md): Traditional Chinese
+- [README.zh-CN.md](README.zh-CN.md): Simplified Chinese
+- [architecture.md](architecture.md): design invariants
+- [docs/00_差距矩陣.md](docs/00_差距矩陣.md): CC vs Grok gap matrix
+- [docs/01_絲滑啟動.md](docs/01_絲滑啟動.md): day-to-day SOP
+- [docs/02_memory.md](docs/02_memory.md): memory sync
+- [docs/03_mcp.md](docs/03_mcp.md): MCP migration
+- [docs/04_harness_參數表.md](docs/04_harness_參數表.md): harness parameter table
+- [docs/05_dynamic_bidirectional_sync.md](docs/05_dynamic_bidirectional_sync.md): dynamic sync design
+- [AGENTS.md](AGENTS.md): instructions for AI coding assistants

@@ -1,0 +1,16 @@
+.DS_Store
+*.log
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+.clasp.json
+.clasp-account
+docs/_open_source_scan_hits.md
+*.bak
+.idea/
+.vscode/
