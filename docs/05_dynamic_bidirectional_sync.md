@@ -5,13 +5,21 @@
 
 ## 0. 靜態 vs 動態
 
-| | 靜態（已有） | 動態（目標） |
+| | 靜態 | 動態（現行首選） |
 |---|---|---|
-| 觸發 | 人手跑 `install_bridge` / `memory_sync` | session 事件、檔案 mtime、可選 launchd |
-| memory | 手動 mirror | session 開始自動 pull（CC→Grok） |
-| hooks 包裝 | 手動 install | CC settings.json mtime 變了 → 重跑 install |
-| skills | **已是活 symlink**（改 SKILL/ 即生效） | 不需再鏡像；doctor 偵測斷鏈即可 |
-| 寫回 CC | 無 | 僅白名單（見 §3） |
+| 觸發 | 人手跑 `install_bridge` / `memory_sync` | **SessionStart → bridge_pull**（fail-open）；必要時手動 pull |
+| memory | 僅手動 mirror | 開場自動 pull（CC→Grok） |
+| hooks 包裝 | 僅手動 install | CC settings.json mtime 較新 → 開場重包 |
+| skills | **活 symlink**（改正文即生效） | 不進 pull；doctor 斷鏈即可 |
+| 寫回 CC | 無默認 | 僅白名單 + 用戶明示（見 §3） |
+| launchd | — | **預設不安裝**（見下方決策） |
+
+### 決策：為何不用 launchd 當預設（2026-07-12 · 給 Codex 橋沿用）
+
+- 用 harness 時才需要最新 CC 狀態 → **開 session 拉一次**語意正確。  
+- 不定時背景跑：省電、少 plist 故障面、失敗用 fail-open 不擋開場。  
+- 新 CC hook：寫進 settings → 下次 SessionStart stale install 即可；只改腳本正文則 adapter 已直調本體。  
+- launchd 僅當「長期不開該 CLI 也要更新鏡像」才當**可選加菜**，勿當母版預設。
 
 ## 1. 各域「誰是真相源」
 
@@ -35,8 +43,8 @@
          2) install_bridge.py --if-stale   # settings/hooks mtime 變才重包
          3) bridge_doctor.py --quiet       # 失敗只警告不擋開場
 
-[可選 launchd 每日]
-    → 同 pull（筆電開著才跑）
+[不要預設 launchd]
+    → 非「用才同步」需求勿裝
 
 [明確用戶指令「push memory to CC」]
     → memory_push.py   # 僅 topic 白名單；永不默認
@@ -59,7 +67,7 @@
 
 - skills 斷鏈自動修（只重建 `~/.claude/commands` symlink？**碰 CC** → 需用戶開閘；或只報警）  
 - MCP 名稱 diff 報告（永不抄 secret）  
-- launchd 可選 plist 模板（預設不安裝）
+- launchd：**不排進預設**；有明確「不開 harness 也要鏡像」需求再當可選模板
 
 ## 6. 第三階段（真·雙向）
 

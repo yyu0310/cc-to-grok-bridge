@@ -393,8 +393,27 @@ Grok SessionStart
 | CC 改 settings hooks | 下次 pull／--if-stale 重包 | ✅ |
 | CC 改 skill 正文 | 無需同步（symlink） | ✅ 天生 |
 | Grok 寫 general memory | 候選 push | ❌ 未做 |
-| launchd 每日 | pull | ❌ 模板可後補 |
+| launchd 每日 | pull | ❌ **刻意不做預設**（見 §7.4） |
 | MCP key | 人 | 文檔 only |
+
+### 7.4 設計決策：SessionStart pull 優於 launchd（跨 harness 沿用）
+
+> **Bill 2026-07-12 定案** — 之後 **cc-codex-bridge**（及任何新 harness 橋）預設同一套，不要先上 launchd。
+
+| | SessionStart／開場 pull | launchd 背景定時 |
+|--|-------------------------|------------------|
+| 何時跑 | **用該 harness 時**才對齊 | 筆電開著就可能跑 |
+| 成本 | 不開 session 不燒背景 | 多一個 plist／權限／睡眠漏跑故障面 |
+| 語意 | 「要最新 CC 狀態」與「開始工作」同一刻 | 與是否使用 harness 脫鉤 |
+| 失敗 | fail-open，不擋開場 | 靜默失敗較難察覺 |
+
+**維護語意（給未來做 Codex 橋的人）：**
+
+1. **動態拉** = 開 session 跑 `bridge_pull`（memory 鏡像 + settings mtime 變才重包 hooks），不是全檔 copy settings。  
+2. **新 CC hook**：登錄進 CC settings → 下次開場 stale → install 重包；只改既有 `.sh` 正文則無需重包（adapter 直調本體）。  
+3. **不要**預設裝 launchd「每日 sync」；僅當明確需求是「長期不開該 harness 也要更新鏡像」才當可選加菜。  
+4. skills 靠 symlink／掃描路徑＝活連線，不必進 pull。
+
 
 ---
 
