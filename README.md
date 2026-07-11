@@ -9,9 +9,31 @@ Bridge **Claude Code** → **Grok Build**: reuse rules / skills, run the same ho
 | Layer | What the bridge does |
 |-------|----------------------|
 | Rules / skills | Point Grok at the same `CLAUDE.md` + `~/.claude/commands` you already use |
-| Hooks | Wrap CC hook scripts with a thin adapter (payload + deny protocol) |
+| Hooks | Call your existing Claude Code security scripts through a thin adapter that translates allow/deny for Grok (see below) |
 | Memory | Optional one-way mirror: CC → Grok (`_from_cc` / `general` / `grok` isolation) |
 | MCP | Docs only — never auto-copy API keys or OAuth tokens |
+
+### What the hook adapter does (plain language)
+
+Claude Code hooks are shell scripts (e.g. block reading `.env`). Grok also runs hooks, but the contracts differ:
+
+1. **JSON field names on stdin differ** (payload shape)
+2. **How “block this tool call” is reported differs** (deny protocol)
+
+So you cannot point Grok straight at CC scripts. A thin **adapter** (`scripts/hook_adapter.py`) sits in the middle: Grok calls it; it calls your existing `~/.claude/hooks/*.sh`.
+
+| Term | Meaning |
+|------|---------|
+| **Thin adapter** | Format translation only — does not reimplement the security policy |
+| **Wraps CC scripts** | Invokes the same scripts; bodies stay on the CC side |
+| **Payload normalize** | Map Grok field names to what CC scripts expect (e.g. `target_file` → `file_path`) |
+| **Deny translate** | CC often uses `exit 2` + stderr; adapter emits Grok’s `{"decision":"deny", …}` |
+
+Why this design:
+
+- **Single source of truth** — blocklists stay in CC hooks
+- **Hard block on Grok** — not “model please remember”; the tool call is actually denied
+- **No forking CC scripts** — no need to edit `~/.claude/hooks/*.sh` just for Grok
 
 ## Requirements
 

@@ -9,9 +9,31 @@
 | 層 | 橋做什麼 |
 |----|----------|
 | 規則／skill | 讓 Grok 吃你既有的 `CLAUDE.md` 與 `~/.claude/commands` |
-| hooks | 薄 adapter 包 CC hook 腳本（payload 正規化 + deny 翻譯） |
+| hooks | 用一層轉接器呼叫你原本的 Claude Code 安全腳本，並把「允許／拒絕」轉成 Grok 看得懂的格式（見下） |
 | memory | 可選單向鏡像：CC → Grok（`_from_cc`／`general`／`grok` 硬隔離） |
 | MCP | 只提供遷移手冊 — **永不**自動搬 API key／OAuth |
+
+### hooks 轉接器在幹嘛（白話）
+
+Claude Code 的 hook 是一堆 shell 腳本（例如擋讀 `.env`）。Grok 也會跑 hook，但兩邊約定不一樣：
+
+1. **送進腳本的 JSON 欄位名不同**（payload 形狀不同）
+2. **「擋下來」時要回給 UI 的格式也不同**（deny 協議不同）
+
+所以不能把 CC 腳本原封不動當 Grok hook 用。中間那層薄程式叫 **adapter**（`scripts/hook_adapter.py`）：Grok 先呼叫它，它再去叫你原本的 `~/.claude/hooks/*.sh`。
+
+| 詞 | 意思 |
+|----|------|
+| **薄 adapter** | 只做格式轉換，不重寫整套安全邏輯 |
+| **包 CC hook 腳本** | 包一層再呼叫既有腳本；腳本本體仍是 CC 那份 |
+| **payload 正規化** | 把 Grok 的欄位名對成 CC 腳本看得懂的（例如 `target_file` → `file_path`） |
+| **deny 翻譯** | CC 擋下時常 `exit 2` + 錯誤訊息；adapter 改成 Grok 認得的 `{"decision":"deny", …}` |
+
+這樣做的理由：
+
+- **單一真相**：禁讀規則仍只維護在 CC hook 裡
+- **Grok 也能硬擋**：不是只靠模型「記得不要讀」，工具真的會被擋
+- **不改 CC 腳本本體**：不用為了 Grok 去改 `~/.claude/hooks/*.sh`
 
 ## 需求
 
