@@ -8,7 +8,8 @@
 
 | 層 | 橋做什麼 |
 |----|----------|
-| 規則／skill | 讓 Grok 吃你既有的 `CLAUDE.md` 與 `~/.claude/commands` |
+| System Prompt | 讓 Grok 吃你既有的 workspace `CLAUDE.md`（compat 載入） |
+| skill | 掃你既有的 `~/.claude/commands`（slash／symlink） |
 | hooks | 用一層轉接器呼叫你原本的 Claude Code 安全腳本，並把「允許／拒絕」轉成 Grok 看得懂的格式（見下） |
 | memory | CC→Grok pull + rules 指標 + 三區隔離；可選受限 push |
 | MCP | 依**型態**由 AI 代裝（永不自動抄 secret；見 AGENTS.md） |
@@ -17,7 +18,8 @@
 
 | 域 | 日用相容 | 能怎麼用 | 不是 100% 的地方 |
 |----|----------|----------|------------------|
-| **規則／skill** | **高** | 同一份 `CLAUDE.md`、同一套 `~/.claude/commands` | — |
+| **System Prompt** | **高** | 同一份 workspace `CLAUDE.md`（Grok compat 自動載入） | — |
+| **skill** | **高** | 同一套 `~/.claude/commands`（含 symlink 到 skill 正文） | 少數 skill 缺 frontmatter 仍可用 slash；語法／觸發與 CC 細節可能不同 |
 | **Hooks** | **高** | adapter + 你的 CC 腳本硬擋 | payload／deny 要轉；沒有完整 CC 式 ask UI |
 | **Memory** | **高** | `memory_sync`、`.grok/rules/cc-memory-pointer`（開 workspace 就載）、`_from_cc`／`general`／`grok`、可選 `memory_push` | 與 CC 開場載 MEMORY.md 索引的機制不同；產品 `memory_search` 是加強項 |
 | **MCP** | **中** | 依型態重裝（HTTP key、OAuth、stdio）；Notion／Google 見文檔 | claude.ai **雲端 connector 不可攜**；secret 永不自動抄 |

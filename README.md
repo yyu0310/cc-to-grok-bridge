@@ -8,7 +8,8 @@ Bridge **Claude Code** → **Grok Build**: reuse rules / skills, run the same ho
 
 | Layer | What the bridge does |
 |-------|----------------------|
-| Rules / skills | Point Grok at the same `CLAUDE.md` + `~/.claude/commands` you already use |
+| System Prompt | Point Grok at the same workspace `CLAUDE.md` (compat load) |
+| skill | Reuse `~/.claude/commands` slash skills (including symlinks) |
 | Hooks | Call your existing Claude Code security scripts through a thin adapter that translates allow/deny for Grok (see below) |
 | Memory | CC → Grok pull + rules pointer + three-zone isolation; optional constrained push |
 | MCP | AI-assisted install by **server type** (never auto-copy secrets; see AGENTS.md) |
@@ -17,7 +18,8 @@ Bridge **Claude Code** → **Grok Build**: reuse rules / skills, run the same ho
 
 | Domain | Day-to-day fit | What works | What is not 100% |
 |--------|----------------|------------|------------------|
-| **Rules / skills** | **High** | Same `CLAUDE.md`, same `~/.claude/commands` | — |
+| **System Prompt** | **High** | Same workspace `CLAUDE.md` (Grok compat auto-load) | — |
+| **skill** | **High** | Same `~/.claude/commands` set (including symlinked skill bodies) | A few skills may lack frontmatter but slash still works; trigger details can differ from CC |
 | **Hooks** | **High** | Hard blocks via adapter + your CC scripts | Payload/deny need adapter; no full CC-style ask UI |
 | **Memory** | **High** | `memory_sync`, `cc-memory-pointer` in `.grok/rules/` (loads with the workspace), `_from_cc` / `general` / `grok`, optional `memory_push` | Not the same loader as CC’s MEMORY.md index; product `memory_search` is optional enhancement |
 | **MCP** | **Medium** | Reinstall per type (HTTP key, OAuth, stdio); Notion / Google guides in docs | claude.ai **cloud connectors** are not portable; secrets never auto-copied |

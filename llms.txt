@@ -4,7 +4,7 @@
 
 ## Facts
 
-- Grok can load the same project CLAUDE.md and ~/.claude/commands skills when configured.
+- System Prompt: same workspace CLAUDE.md (compat). skill: ~/.claude/commands (separate from system prompt).
 - Hooks: thin adapter for payload field names and deny protocol; CC hook script bodies stay source of truth.
 - Memory: day-use is high-fit — memory_sync + .grok/rules/cc-memory-pointer (loads with workspace rules). Product memory search is optional; bridge does not require [memory] enabled=true just to load the pointer.
 - Memory layout: _from_cc / general / grok isolation; optional memory_push for general/ only.
