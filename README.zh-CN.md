@@ -90,7 +90,7 @@ python3 scripts/bridge_doctor.py --workspace "$CC_GROK_WORKSPACE"   # 应 fails=
 | `scripts/bridge_doctor.py` | 只读体检 + 硬挡冒烟测试 |
 | `scripts/hook_acceptance.py` | adapter 层验收 |
 | `architecture.md` | 架构不变量（「为什么」的单一真相） |
-| `docs/` | 差距矩阵、日用 SOP、memory、MCP、harness 表 |
+| `docs/` | 差距矩阵、日用 SOP、memory、MCP、plugins、harness 表 |
 
 ## 安全
 
