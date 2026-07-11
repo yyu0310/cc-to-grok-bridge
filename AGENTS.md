@@ -41,15 +41,15 @@ Real-world note: bringing a CC setup into **Grok Build** is usually much smoothe
 
 ## Plugins（給 AI）
 
-CC auto-enabled plugins (marketplace + SessionStart always-on) **do not** transfer to Grok.
+CC auto-enabled plugins (marketplace + SessionStart always-on) **do not** transfer to Grok.  
+Users install plugins **to avoid manual slash** — do **not** recommend “just run /skill each session” as a migration path.
 
-1. Run `grok plugin list`. If empty while CC has plugins enabled, that is expected.  
-2. For each capability the user cares about:
-   - **A** — Upstream has a real Grok plugin → `grok plugin install <source> --trust` only after user OK; then enable + restart session.  
-   - **B** — Need always-on text → copy instruction-level rules into `<workspace>/.grok/rules/<name>.md` (no `--trust`).  
-   - **C** — On-demand only → rely on slash skills; do not claim always-on.  
+1. Run `grok plugin list`. Empty while CC has plugins enabled is expected.  
+2. For each always-on capability:
+   - **A** — Real Grok plugin packaging exists (merged upstream or user-approved ref) → `grok plugin install <source> --trust` after user OK; enable + restart session.  
+   - **B** — No Grok packaging yet → instruction always-on in `<workspace>/.grok/rules/<name>.md` (auto-load, no slash).  
 3. Never assume `claude plugin install` ≡ `grok plugin install`.  
-4. Do not auto-install untrusted forks; if a Grok adapter PR is unmerged/dirty, prefer B unless user explicitly accepts risk.  
+4. Do not auto-install unmerged/dirty forks with `--trust` unless the user explicitly accepts that risk; default to B while waiting for upstream.  
 5. Details: [docs/06_plugins.md](docs/06_plugins.md).
 
 ## MCP 部署手冊（給 AI 手把手執行）
