@@ -1,6 +1,6 @@
 # 06_Plugins — Claude Code → Grok Build
 
-> 相容等級：**中偏低**（skill 清單可能看得見；**always-on 不會自動跟過去**）。  
+> 相容等級：**低**（skill 清單可能看得見；**always-on 不會自動跟過去**）。  
 > 用 plugin 的目的就是 **不用每場手動開**——遷移只談 always-on 路線。  
 > 給 AI 的操作見 [AGENTS.md](../AGENTS.md)「Plugins」。
 
