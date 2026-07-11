@@ -21,10 +21,10 @@
 |----|--------|----------|------------------|
 | System Prompt | 高 | 同一份 workspace CLAUDE.md（Grok compat 自动加载） | — |
 | skill | 高 | 同一套 ~/.claude/commands（含 symlink） | 少数缺 frontmatter 仍可用；触发细节可能不同 |
-| Hooks | 中 | adapter + 你的 CC 脚本硬挡 | payload／deny 要转；无完整 CC 式 ask UI |
 | Memory | 高 | memory_sync + rules 指针 + 三区隔离；可选 memory_push | 与 CC 载 MEMORY.md 索引机制不同；产品搜索是增强项 |
-| Plugins | 低 | A：有 Grok 包装再 install；B：rules always-on（见补充） | CC 设置不会自动过去；marketplace 不通 |
+| Hooks | 中 | adapter + 你的 CC 脚本硬挡 | payload／deny 要转；无完整 CC 式 ask UI |
 | MCP | 中 | 按类型重装（HTTP key、OAuth、stdio）；Notion／Google 见文档 | claude.ai 云端 connector 不可携；secret 永不自动抄 |
+| Plugins | 低 | A：有 Grok 包装再 install；B：rules always-on（见补充） | CC 设置不会自动过去；marketplace 不通 |
 
 **实测体感：** 把 CC 环境导入 **Grok Build**，通常比走 Antigravity／Gemini 桥顺很多（有真 hook 硬挡、memory 也比较好处理）。Plugins always-on 仍是明显落差，要单独处理。
 

@@ -20,14 +20,14 @@ This repo is a **thin bridge**: Claude Code stays the source of truth for rules,
 
 ## Compatibility (summary)
 
-| Domain | Day-to-day | Notes |
-|--------|------------|--------|
+| Domain | Compatibility | Notes |
+|--------|---------------|--------|
 | System Prompt | High | Same workspace `CLAUDE.md` (compat) |
 | skill | High | Same `~/.claude/commands` (symlinks OK); minor frontmatter/trigger diffs |
-| Hooks | Medium | Adapter for payload + deny; no full CC-style ask UI |
 | Memory | High | Pull + rules pointer + 3-zone layout; product search optional |
-| Plugins | Low | No auto-port of CC `enabledPlugins`; see docs/06_plugins.md |
+| Hooks | Medium | Adapter for payload + deny; no full CC-style ask UI |
 | MCP | Medium | Manual/AI-assisted per server; claude.ai cloud connectors not portable |
+| Plugins | Low | No auto-port of CC `enabledPlugins`; see docs/06_plugins.md |
 
 Real-world note: bringing a CC setup into **Grok Build** is usually much smoother than the Antigravity/Gemini bridge path (hooks hard-block + simpler memory).
 

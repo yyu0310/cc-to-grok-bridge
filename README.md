@@ -21,10 +21,10 @@ Bridge **Claude Code** → **Grok Build**: reuse rules / skills, run the same ho
 |--------|---------------|------------|------|
 | System Prompt | High | Same workspace CLAUDE.md (Grok compat auto-load) | — |
 | skill | High | Same ~/.claude/commands set (symlinks OK) | Minor frontmatter / trigger differences |
-| Hooks | Medium | Adapter + your CC hard-block scripts | Payload/deny translation; no full CC ask UI |
 | Memory | High | memory_sync + rules pointer + three-zone layout; optional push | Not the same as CC MEMORY.md index load; product search optional |
-| Plugins | Low | A: install when Grok packaging exists; B: rules always-on (see note) | CC settings do not auto-port; different marketplaces |
+| Hooks | Medium | Adapter + your CC hard-block scripts | Payload/deny translation; no full CC ask UI |
 | MCP | Medium | Reinstall by type (HTTP key, OAuth, stdio); Notion/Google in docs | claude.ai cloud connectors not portable; secrets never auto-copied |
+| Plugins | Low | A: install when Grok packaging exists; B: rules always-on (see note) | CC settings do not auto-port; different marketplaces |
 
 **In practice:** moving a Claude Code setup onto **Grok Build** is usually much smoother than the Antigravity / Gemini bridge path (real hard-blocks + simpler memory). Always-on plugins still need a deliberate path.
 
