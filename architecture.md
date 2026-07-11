@@ -398,7 +398,7 @@ Grok SessionStart
 
 ### 7.4 設計決策：SessionStart pull 優於 launchd（跨 harness 沿用）
 
-> **Bill 2026-07-12 定案** — 之後 **cc-codex-bridge**（及任何新 harness 橋）預設同一套，不要先上 launchd。
+> **2026-07-12 定案** — 之後 **cc-codex-bridge**（及任何新 harness 橋）預設同一套，不要先上 launchd。
 
 | | SessionStart／開場 pull | launchd 背景定時 |
 |--|-------------------------|------------------|
