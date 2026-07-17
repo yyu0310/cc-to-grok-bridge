@@ -15,6 +15,18 @@
 | plugins | **不自动**搬 CC `enabledPlugins`；always-on 见 [docs/06_plugins.md](docs/06_plugins.md)（原生 plugin 或 rules 备援） |
 | MCP | 按**类型**由 AI 代装（永不自动抄 secret；见 AGENTS.md） |
 
+## 研究助手：ccgrok.sh
+
+一支小 wrapper，把 `grok -p` 当成有纪律的研究工具。它会垫上一段与模型无关的研究方法前缀（[`research-prefix.md`](research-prefix.md)），并从一个干净的临时目录跑，让纯研究查询不被项目规则污染。
+
+```bash
+scripts/ccgrok.sh "你的问题"
+```
+
+前缀会逼它给出附来源、附日期、事实与推测分离的答案，并且（同题实测）让 Grok **主动标出过期或被降级的信息**，而不是很笃定地讲错。同一份 `research-prefix.md` 对任何 headless AI CLI（`grok -p`、`agy -p`、`claude -p`）都适用。
+
+只读 flag（`--disallowed-tools "run_terminal_cmd,write,search_replace"`）确保即使 auto-approve，这次执行也碰不到本地文件。
+
 ## 兼容表
 
 | 域 | 兼容性 | 能怎么用 | 不是 100% 的地方 |
