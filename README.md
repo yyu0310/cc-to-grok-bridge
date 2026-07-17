@@ -15,6 +15,18 @@ Bridge **Claude Code** → **Grok Build**: reuse rules / skills, run the same ho
 | Plugins | Does **not** auto-port CC `enabledPlugins`; always-on only — see [docs/06_plugins.md](docs/06_plugins.md) |
 | MCP | AI-assisted install by **server type** (never auto-copy secrets; see AGENTS.md) |
 
+## Research helper: ccgrok.sh
+
+A small wrapper that drives `grok -p` as a disciplined research tool. It prepends a model-agnostic research-method prefix ([`research-prefix.md`](research-prefix.md)) and runs from a clean temp directory, so a pure research query is not polluted by project rules.
+
+```bash
+scripts/ccgrok.sh "your question"
+```
+
+The prefix forces sourced, dated answers with facts separated from speculation, and (measured on the same query) makes Grok flag stale or downgraded facts instead of stating them with false confidence. The same `research-prefix.md` works with any headless AI CLI (`grok -p`, `agy -p`, `claude -p`).
+
+The read-only flags (`--disallowed-tools "run_terminal_cmd,write,search_replace"`) keep the run unable to touch local files even under auto-approve.
+
 ## Compatibility matrix
 
 | Domain | Compatibility | What works | Gaps |
