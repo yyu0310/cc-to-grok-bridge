@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shlex
 import shutil
 import sys
 from pathlib import Path
@@ -53,28 +54,34 @@ def wrap_command(command: str, adapter: Path) -> str:
     支援：
       /abs/path/script.sh
       /abs/path/script.sh --flag
-    內嵌 shell one-liner 則：python3 adapter -- bash -lc '...'
+      /abs/path/with spaces/script.sh
+    內嵌 shell one-liner 則：python3 adapter /bin/bash -lc '...'
+
+    重要：路徑含空白時不能用舊 regex \\S+（會漏判→落到 bash -lc，
+    再被空白切開 → 腳本沒跑、adapter fail-open allow）。改用可含空白的
+    路徑匹配 + shlex.quote，絕對路徑腳本直傳 adapter，不走 -lc。
     """
     command = command.strip()
     # 已是 adapter 包過的不重複包
     if "_cc_bridge_adapter.py" in command or "hook_adapter.py" in command:
         return command
 
-    # 絕對路徑腳本（可含參數）
-    m = re.match(r"^(/\S+\.(?:sh|py|bash))(\s+.*)?$", command)
+    py = shlex.quote(sys.executable)
+    ad = shlex.quote(str(adapter))
+
+    # 絕對路徑腳本（允許空白／非 ASCII；可含參數）
+    m = re.match(r"^(/.+\.(?:sh|py|bash))(\s+.*)?$", command)
     if m:
         script = m.group(1)
         rest = (m.group(2) or "").strip()
-        parts = [sys.executable, str(adapter), script]
+        # 直傳腳本給 adapter（argv），不要 bash -lc（-lc 會再切空白）
+        parts = [py, ad, shlex.quote(script)]
         if rest:
-            # 剩餘參數原樣附加（簡易）
-            return " ".join(parts) + " " + rest
+            parts.append(rest)
         return " ".join(parts)
 
-    # 其他：用 bash -lc 包
-    # 注意：引號逃逸
-    escaped = command.replace("'", "'\"'\"'")
-    return f"{sys.executable} {adapter} /bin/bash -lc '{escaped}'"
+    # 其他：用 bash -lc 包整段 command（shlex.quote 正確處理內部引號／空白）
+    return f"{py} {ad} /bin/bash -lc {shlex.quote(command)}"
 
 
 def transform_hooks(hooks: dict, adapter: Path) -> dict:
@@ -110,18 +117,26 @@ def transform_hooks(hooks: dict, adapter: Path) -> dict:
 
 def inject_grok_memory_hooks(hooks: dict, adapter: Path) -> dict:
     """Grok-only：產品 memory 路徑閘門（不改 CC 腳本本體）。"""
-    write_gate = REPO_SCRIPTS / "grok_memory_write_gate.sh"
-    index_check = REPO_SCRIPTS / "grok_memory_index_check.sh"
-    if not write_gate.is_file() or not index_check.is_file():
+    write_gate_src = REPO_SCRIPTS / "grok_memory_write_gate.sh"
+    index_check_src = REPO_SCRIPTS / "grok_memory_index_check.sh"
+    if not write_gate_src.is_file() or not index_check_src.is_file():
         print("warn: grok memory gate scripts missing; skip inject", file=sys.stderr)
         return hooks
 
-    # 可執行位
-    for p in (write_gate, index_check):
+    # 複製到 ~/.grok/hooks/（無空白路徑）再 wrap。若 repo checkout 在含空白的
+    # 路徑下，直接 wrap 原路徑會被 bash 二次切開 → 腳本沒跑、adapter fail-open allow。
+    GROK_HOOKS_DIR.mkdir(parents=True, exist_ok=True)
+    write_gate = GROK_HOOKS_DIR / write_gate_src.name
+    index_check = GROK_HOOKS_DIR / index_check_src.name
+    for src, dest in ((write_gate_src, write_gate), (index_check_src, index_check)):
         try:
-            p.chmod(p.stat().st_mode | 0o111)
-        except OSError:
-            pass
+            shutil.copy2(src, dest)
+            dest.chmod(dest.stat().st_mode | 0o111)
+        except OSError as e:
+            print(f"warn: copy {src.name} → {dest}: {e}", file=sys.stderr)
+            # 退回原路徑（至少功能在無空白環境仍可用）
+            write_gate, index_check = write_gate_src, index_check_src
+            break
 
     pre = list(hooks.get("PreToolUse") or [])
     # 避免重裝重複注入
